@@ -333,6 +333,21 @@ class TubeUpTests(unittest.TestCase):
 
         self.assertEqual(expected_result, result)
 
+    def test_create_archive_org_metadata_from_youtubedl_meta_description_text_null(self):
+        with open(get_testfile_path(
+                'description_text_null.json')
+                ) as f:
+            vid_meta = json.load(f)
+
+        result = TubeUp.create_archive_org_metadata_from_youtubedl_meta(
+            vid_meta
+        )
+
+        expected_description = (' <br/><br/>Source: <a href="url">url</a><br/>'
+                                'Uploader: <a href="url">tubeup.py</a>')
+
+        self.assertEqual(expected_description, result.get('description'))
+
     def test_create_archive_org_metadata_from_youtubedl_meta_no_uploader(self):
         with open(get_testfile_path(
                 'Mountain_3_-_Video_Background_HD_1080p-6iRV8liah8A.info_no_'
@@ -411,6 +426,33 @@ class TubeUpTests(unittest.TestCase):
                         'online;youtube;HD;1080p;Amazing Nature;Mountain;'),
             'originalurl': 'https://www.youtube.com/watch?v=6iRV8liah8A',
             'licenseurl': 'https://creativecommons.org/licenses/by/3.0/',
+            'scanner': SCANNER}
+
+        self.assertEqual(expected_result, result)
+
+    def test_create_archive_org_metadata_from_youtubedl_meta_twitch_clips(self):
+        with open(get_testfile_path(
+                'EA_Play_2016_Live_from_the_Novo_Theatre-42850523.info.json')
+                ) as f:
+            vid_meta = json.load(f)
+
+        result = TubeUp.create_archive_org_metadata_from_youtubedl_meta(
+            vid_meta
+        )
+
+        expected_result = {
+            'mediatype': 'movies',
+            'creator': 'EA',
+            'collection': 'opensource_movies',
+            'title': 'EA Play 2016 Live from the Novo Theatre',
+            'description': (' <br/><br/>Source: <a href="https://clips.twitch.tv/FaintLightGullWholeWheat">'
+                            'https://clips.twitch.tv/FaintLightGullWholeWheat</a><br/>Uploader: '
+                            '<a href="https://clips.twitch.tv/FaintLightGullWholeWheat">EA</a>'),
+            'date': '2016-06-12',
+            'year': '2016',
+            'subject': 'TwitchClips;video;',
+            'originalurl': 'https://clips.twitch.tv/FaintLightGullWholeWheat',
+            'licenseurl': '',
             'scanner': SCANNER}
 
         self.assertEqual(expected_result, result)
